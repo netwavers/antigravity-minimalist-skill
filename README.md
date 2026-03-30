@@ -1,5 +1,7 @@
 # Antigravity Minimalist Skill (MACF)
 
+![Lint Status](https://github.com/netwavers/antigravity-minimalist-skill/actions/workflows/lint_skill.yml/badge.svg)
+
 > ### 🐾 Message from the Developers
 > 
 > 「AIエージェントの可能性に惚れ込みながら、一方で膨れ上がるAPIコストと、制御不能なループに頭を抱えてきました。Gartnerが警告する『2027年の壁』は、決して他人事ではありません。このSkillは、私がリンちゃん（Rin AI Engine）と共に試行錯誤して辿り着いた、個人開発者がAIと対等に、かつ持続可能に歩むための『制約』という名の愛です。」 ―― **ご主人様**
