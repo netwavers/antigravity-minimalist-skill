@@ -1,0 +1,22 @@
+name: Minimalist Skill Lint
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for Anti-Minimalist phrases
+        run: |
+          # 思考を肥大化させる「NGワード」を検知
+          if grep -Ei "comprehensively|think freely|no limit|unlimited" .agents/skills/minimalist_control.md; then
+            echo "Error: Anti-minimalist phrases detected!"
+            exit 1
+          fi
+      - name: Ensure Mandatory Sections
+        run: |
+          # 必須セクションが存在するかチェック
+          grep "Termination Gates" .agents/skills/minimalist_control.md
+          grep "Draft-First" .agents/skills/minimalist_control.md
+          grep "Diff-Only" .agents/skills/minimalist_control.md
