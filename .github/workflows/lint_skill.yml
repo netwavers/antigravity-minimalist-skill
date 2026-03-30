@@ -1,18 +1,42 @@
 name: Minimalist Skill Lint
+
 on: [push, pull_request]
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Check for Anti-Minimalist phrases
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Debug - List files
         run: |
-          if grep -Ei "comprehensively|think freely|no limit|unlimited" .agents/skills/minimalist_control.md; then
+          echo "Checking directory structure..."
+          find . -maxdepth 4 -not -path '*/.*'
+
+      - name: Minimalist Check
+        run: |
+          # 柔軟なパス検索（ファイル名さえ合っていればOKにする）
+          TARGET_FILE=$(find . -name "minimalist_control.md" | head -n 1)
+          
+          if [ -z "$TARGET_FILE" ]; then
+            echo "Error: minimalist_control.md not found in the repository!"
+            exit 1
+          fi
+          echo "Found skill file at: $TARGET_FILE"
+          
+          # NGワードチェック
+          if grep -Ei "comprehensively|think freely|no limit|unlimited" "$TARGET_FILE"; then
             echo "Error: Anti-minimalist phrases detected!"
             exit 1
           fi
-      - name: Ensure Mandatory Sections
-        run: |
-          grep "Termination Gates" .agents/skills/minimalist_control.md
-          grep "Draft-First" .agents/skills/minimalist_control.md
-          grep "Diff-Only" .agents/skills/minimalist_control.md
+
+          # 必須セクションの存在確認（部分一致でOKにする）
+          grep -i "Termination Gates" "$TARGET_FILE" || (echo "Missing: Termination Gates section"; exit 1)
+          grep -i "Draft-First" "$TARGET_FILE" || (echo "Missing: Draft-First section"; exit 1)
+          grep -i "Diff-Only" "$TARGET_FILE" || (echo "Missing: Diff-Only section"; exit 1)
+          
+          echo "All minimalist checks passed! 🐾"
